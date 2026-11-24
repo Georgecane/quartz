@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/quartz-logo.webp" alt="QUARTZ logo" width="360">
+</p>
+
 # QUARTZ
 
 **An Apple user-space environment emulator for non-Apple hardware.**
