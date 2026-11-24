@@ -131,4 +131,4 @@ Contributions, design discussions, and technical reviews are welcome. Before pro
 
 ## License
 
-A license has not yet been declared. Until a license is added to this repository, no open-source license should be assumed.
+QUARTZ is licensed under the **GNU General Public License v3.0 (GPL-3.0)**. See the [LICENSE](LICENSE) file for the full license text.
