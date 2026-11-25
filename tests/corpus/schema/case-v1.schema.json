@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/Georgecane/quartz/blob/main/tests/corpus/schema/case-v1.schema.json",
-  "title": "QUARTZ Test Corpus Case v1",
+  "title": "quartz Test Corpus Case v1",
   "description": "A versioned specification for one parser-validation fixture.",
   "type": "object",
   "additionalProperties": false,

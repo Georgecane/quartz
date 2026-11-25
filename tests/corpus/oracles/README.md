@@ -7,7 +7,7 @@ An oracle is an independent implementation or platform tool used to establish ex
 - Record the exact tool version at capture time. Do not write latest as a version.
 - Prefer at least one platform-native oracle and, where feasible, a second independent implementation.
 - Compare only capabilities implemented by both tools. Record unsupported fields separately; do not treat missing output as an empty value.
-- Preserve disagreements between oracles and QUARTZ. Investigate them before changing expected output.
+- Preserve disagreements between oracles and quartz. Investigate them before changing expected output.
 - Do not derive expected output solely from the parser under test.
 - Keep commands read-only when possible. Mount disk images read-only and never execute package scripts.
 - Record the host OS build and architecture alongside tool versions.

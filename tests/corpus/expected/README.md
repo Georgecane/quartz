@@ -20,5 +20,5 @@ A content manifest for extracted logical streams. Each entry should include its 
 - Keep raw oracle output separately when practical so normalization can be reviewed.
 - A missing value is not equivalent to an empty value or zero.
 - Do not discard metadata just because one oracle does not expose it.
-- Content hashes must be calculated independently from the QUARTZ extraction result.
+- Content hashes must be calculated independently from the quartz extraction result.
 - Expected files for a planned case are intended output paths only; they must not be treated as captured evidence until the case becomes available.

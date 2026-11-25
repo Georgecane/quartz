@@ -1,6 +1,6 @@
-# QUARTZ Test Corpus
+# quartz Test Corpus
 
-This directory defines the versioned fixture corpus used to validate QUARTZ image, filesystem, package, archive, executable, and shared-cache parsers.
+This directory defines the versioned fixture corpus used to validate quartz image, filesystem, package, archive, executable, and shared-cache parsers.
 
 The corpus is test data and test metadata. It is not part of the runtime and must not define parser behavior. Parser output is compared with independently recorded expectations and, where available, an external oracle.
 
@@ -46,7 +46,7 @@ Each available case records three independent expected-output documents:
 - **Metadata:** format-specific structural metadata such as image geometry, filesystem/container identifiers, volume roles, snapshot identifiers, package metadata, Mach-O load commands, cache mappings, architecture, platform, checksums, and verification results.
 - **Content manifest:** logical size and SHA-256 for extracted streams, plus applicable resource forks, xattrs, symlink targets, sparse extents, and hard-link relationships.
 
-Expected outputs must be captured from a known-good fixture and independently checked. Do not generate expected output from the QUARTZ parser being tested. A missing value is not equivalent to an empty value or zero.
+Expected outputs must be captured from a known-good fixture and independently checked. Do not generate expected output from the quartz parser being tested. A missing value is not equivalent to an empty value or zero.
 
 ## Oracle records
 
@@ -73,4 +73,4 @@ Tool availability and command-line options vary by OS release. The exact command
 5. Set status to available only after artifact and expected-output validation succeeds.
 6. Add malformed variants as separate cases with their own provenance and expectations. Never mutate the original fixture in place.
 
-The corpus format is versioned independently from QUARTZ crate APIs. Breaking manifest changes require a new schema version and migration policy.
+The corpus format is versioned independently from quartz crate APIs. Breaking manifest changes require a new schema version and migration policy.
