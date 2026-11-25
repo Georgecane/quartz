@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Georgecane/quartz/blob/main/tests/corpus/schema/case-v1.schema.json",
+  "title": "QUARTZ Test Corpus Case v1",
+  "description": "A versioned specification for one parser-validation fixture.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "status",
+    "category",
+    "format",
+    "description",
+    "platforms",
+    "architectures",
+    "source",
+    "related_formats",
+    "features",
+    "limits",
+    "oracles",
+    "expected"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "id": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]*$"
+    },
+    "status": { "enum": ["planned", "available", "quarantined"] },
+    "category": {
+      "enum": ["disk_image", "filesystem", "package", "archive", "executable", "shared_cache"]
+    },
+    "format": {
+      "enum": [
+        "udif", "hfsplus", "hfsx", "apfs", "flat_pkg", "xar", "bom", "pbzx",
+        "cpio", "apple_archive", "aea", "ipsw", "img4", "macho", "dyld_shared_cache"
+      ]
+    },
+    "description": { "type": "string", "minLength": 12, "maxLength": 1200 },
+    "platforms": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["macos", "ios", "ipados", "watchos", "tvos", "visionos"] }
+    },
+    "architectures": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "enum": ["x86_64", "arm64", "arm64e", "universal", "not_applicable"] }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "description"],
+      "properties": {
+        "kind": { "enum": ["synthetic", "apple_generated", "real_world", "corrupted"] },
+        "description": { "type": "string", "minLength": 12, "maxLength": 1200 },
+        "generator": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "generator_version": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "operating_system": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "os_version": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "build": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "acquisition_reference": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "provenance_id": { "type": "string", "minLength": 1, "maxLength": 200 }
+      }
+    },
+    "artifact": { "$ref": "#/$defs/artifact" },
+    "related_formats": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "udif", "hfsplus", "hfsx", "apfs", "flat_pkg", "xar", "bom", "pbzx",
+          "cpio", "apple_archive", "aea", "ipsw", "img4", "macho", "dyld_shared_cache"
+        ]
+      }
+    },
+    "features": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 3, "maxLength": 160 }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_input_bytes", "max_output_bytes", "max_entries", "max_nesting_depth",
+        "max_memory_bytes", "max_expansion_ratio"
+      ],
+      "properties": {
+        "max_input_bytes": { "type": "integer", "minimum": 1 },
+        "max_output_bytes": { "type": "integer", "minimum": 1 },
+        "max_entries": { "type": "integer", "minimum": 1 },
+        "max_nesting_depth": { "type": "integer", "minimum": 1 },
+        "max_memory_bytes": { "type": "integer", "minimum": 1 },
+        "max_expansion_ratio": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "oracles": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/oracle" }
+    },
+    "expected": { "$ref": "#/$defs/expected" },
+    "quarantine_reason": { "type": "string", "minLength": 12, "maxLength": 1200 }
+  },
+  "$defs": {
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*\\\\).+"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "size_bytes", "sha256"],
+      "properties": {
+        "path": { "$ref": "#/$defs/safeRelativePath" },
+        "size_bytes": { "type": "integer", "minimum": 1 },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "media_type": { "type": "string", "minLength": 1, "maxLength": 160 }
+      }
+    },
+    "oracle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "tool", "platform", "version_policy", "commands"],
+      "properties": {
+        "role": { "enum": ["primary", "secondary"] },
+        "tool": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "platform": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "version_policy": { "enum": ["record_at_capture", "pinned", "not_applicable"] },
+        "version": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "commands": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["inventory", "metadata", "content_manifest"],
+      "properties": {
+        "inventory": { "$ref": "#/$defs/safeRelativePath" },
+        "metadata": { "$ref": "#/$defs/safeRelativePath" },
+        "content_manifest": { "$ref": "#/$defs/safeRelativePath" }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "available" } }, "required": ["status"] },
+      "then": { "required": ["artifact"] }
+    },
+    {
+      "if": { "properties": { "status": { "const": "quarantined" } }, "required": ["status"] },
+      "then": { "required": ["quarantine_reason"] }
+    }
+  ]
+}

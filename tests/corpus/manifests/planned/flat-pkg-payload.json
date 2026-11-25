@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "flat-pkg.product.component.bom.pbzx",
+  "status": "planned",
+  "category": "package",
+  "format": "flat_pkg",
+  "description": "A small product flat package containing at least one component package, PackageInfo, BOM, scripts, and a compressed payload. Validate XAR member streaming, PBZX/CPIO decoding, BOM metadata, and payload content without executing installer scripts.",
+  "platforms": ["macos"],
+  "architectures": ["not_applicable"],
+  "source": {
+    "kind": "apple_generated",
+    "description": "Build the product and component packages on a versioned macOS host with pkgbuild and productbuild. Preserve the unexpanded package and record the exact generator versions.",
+    "generator": "pkgbuild and productbuild",
+    "generator_version": "record_at_capture",
+    "operating_system": "macOS",
+    "os_version": "record_at_capture",
+    "build": "record_at_capture"
+  },
+  "related_formats": ["xar", "bom", "pbzx", "cpio"],
+  "features": [
+    "xar.toc-and-member-enumeration",
+    "xar.stream-member-data",
+    "pkg.distribution-and-component-metadata",
+    "pkg.packageinfo-parsing",
+    "pbzx.chunked-stream-decoding",
+    "cpio.entry-types-and-path-validation",
+    "bom.path-metadata-and-hardlink-index",
+    "payload.per-file-size-and-hash-verification",
+    "installer.scripts-are-never-executed"
+  ],
+  "limits": {
+    "max_input_bytes": 67108864,
+    "max_output_bytes": 268435456,
+    "max_entries": 20000,
+    "max_nesting_depth": 32,
+    "max_memory_bytes": 67108864,
+    "max_expansion_ratio": 200
+  },
+  "oracles": [
+    {
+      "role": "primary",
+      "tool": "Apple pkgutil and lsbom",
+      "platform": "macOS",
+      "version_policy": "record_at_capture",
+      "commands": [
+        "pkgutil --expand <artifact> <expanded-directory>",
+        "lsbom -s <component-bom>",
+        "Record component metadata, payload file paths, file metadata, and independently calculated content hashes."
+      ]
+    },
+    {
+      "role": "secondary",
+      "tool": "xar",
+      "platform": "macOS",
+      "version_policy": "record_at_capture",
+      "commands": [
+        "xar -tf <artifact>",
+        "Compare the XAR member inventory with the package-level view; retain disagreements for investigation."
+      ]
+    }
+  ],
+  "expected": {
+    "inventory": "expected/flat-pkg/inventory.json",
+    "metadata": "expected/flat-pkg/metadata.json",
+    "content_manifest": "expected/flat-pkg/content.json"
+  }
+}

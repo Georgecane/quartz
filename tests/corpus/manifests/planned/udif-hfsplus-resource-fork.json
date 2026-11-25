@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "id": "udif.hfsplus.resource-fork.symlink",
+  "status": "planned",
+  "category": "disk_image",
+  "format": "udif",
+  "description": "A small Apple-generated UDIF image containing an HFS+ filesystem with a regular file, a symbolic link, a resource fork, and extended attributes. Exercise random block reads and filesystem metadata without materializing the full image.",
+  "platforms": ["macos"],
+  "architectures": ["not_applicable"],
+  "source": {
+    "kind": "apple_generated",
+    "description": "Generate on a versioned macOS host with hdiutil and record the exact macOS build and command-line tool versions at capture time.",
+    "generator": "hdiutil",
+    "generator_version": "record_at_capture",
+    "operating_system": "macOS",
+    "os_version": "record_at_capture",
+    "build": "record_at_capture"
+  },
+  "related_formats": ["hfsplus"],
+  "features": [
+    "udif.header-and-segment-table",
+    "udif.block-map-resolution",
+    "udif.random-range-read",
+    "hfsplus.catalog-enumeration",
+    "hfsplus.symbolic-link",
+    "hfsplus.resource-fork",
+    "hfsplus.extended-attributes",
+    "integrity.truncation-and-checksum-errors"
+  ],
+  "limits": {
+    "max_input_bytes": 134217728,
+    "max_output_bytes": 268435456,
+    "max_entries": 10000,
+    "max_nesting_depth": 32,
+    "max_memory_bytes": 67108864,
+    "max_expansion_ratio": 100
+  },
+  "oracles": [
+    {
+      "role": "primary",
+      "tool": "hdiutil",
+      "platform": "macOS",
+      "version_policy": "record_at_capture",
+      "commands": [
+        "hdiutil imageinfo <artifact>",
+        "hdiutil attach -readonly -nobrowse <artifact>"
+      ]
+    },
+    {
+      "role": "secondary",
+      "tool": "macOS filesystem tools (stat, xattr, readlink, shasum)",
+      "platform": "macOS",
+      "version_policy": "record_at_capture",
+      "commands": [
+        "Record the mounted tree, file metadata, symlink targets, resource-fork bytes, extended attributes, and SHA-256 values.",
+        "Detach the image after capture and retain the exact capture commands in the oracle record."
+      ]
+    }
+  ],
+  "expected": {
+    "inventory": "expected/udif-hfsplus/inventory.json",
+    "metadata": "expected/udif-hfsplus/metadata.json",
+    "content_manifest": "expected/udif-hfsplus/content.json"
+  }
+}

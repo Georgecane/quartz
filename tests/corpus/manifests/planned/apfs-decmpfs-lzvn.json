@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "apfs.decmpfs.lzvn.system-file",
+  "status": "planned",
+  "category": "filesystem",
+  "format": "apfs",
+  "description": "A versioned APFS filesystem fixture containing a file whose decmpfs metadata explicitly identifies the LZVN compression type, together with ordinary files, sparse extents, and extended attributes. The case is accepted only after the compression identifier has been inspected from the actual fixture; the presence of a compressed file alone is not sufficient.",
+  "platforms": ["macos"],
+  "architectures": ["arm64", "x86_64"],
+  "source": {
+    "kind": "real_world",
+    "description": "Obtain the filesystem data from a versioned Apple system artifact for which redistribution or local test use is permitted. Record product version, build, source artifact identity, and the decmpfs algorithm identifier observed in the fixture. Do not assume a generic hdiutil or ditto compression command produces LZVN.",
+    "operating_system": "macOS",
+    "os_version": "record_at_capture",
+    "build": "record_at_capture",
+    "provenance_id": "record_at_capture"
+  },
+  "related_formats": ["udif"],
+  "features": [
+    "apfs.container-and-volume-superblocks",
+    "apfs.catalog-and-extent-lookup",
+    "apfs.sparse-extents",
+    "apfs.extended-attributes",
+    "apfs.decmpfs-header-parsing",
+    "apfs.decmpfs.lzvn-decoding",
+    "integrity.file-content-hash"
+  ],
+  "limits": {
+    "max_input_bytes": 268435456,
+    "max_output_bytes": 536870912,
+    "max_entries": 20000,
+    "max_nesting_depth": 64,
+    "max_memory_bytes": 134217728,
+    "max_expansion_ratio": 200
+  },
+  "oracles": [
+    {
+      "role": "primary",
+      "tool": "macOS APFS tools and filesystem APIs",
+      "platform": "macOS",
+      "version_policy": "record_at_capture",
+      "commands": [
+        "Record container and volume metadata with diskutil apfs list.",
+        "Read the mounted file contents and calculate independent SHA-256 values.",
+        "Record extended attributes and independently inspect the decmpfs metadata to confirm the LZVN algorithm identifier."
+      ]
+    },
+    {
+      "role": "secondary",
+      "tool": "libfsapfs",
+      "platform": "Linux or macOS",
+      "version_policy": "record_at_capture",
+      "commands": [
+        "Enumerate the same supported volume and file metadata where possible.",
+        "Record unsupported structures and compare only fields implemented by both readers."
+      ]
+    }
+  ],
+  "expected": {
+    "inventory": "expected/apfs-decmpfs-lzvn/inventory.json",
+    "metadata": "expected/apfs-decmpfs-lzvn/metadata.json",
+    "content_manifest": "expected/apfs-decmpfs-lzvn/content.json"
+  }
+}
