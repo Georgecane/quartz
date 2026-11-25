@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/quartz-logo.webp" alt="quartz logo" width="360">
+  <img src="assets/quartz-logo.jpeg" alt="quartz logo" width="360">
 </p>
 
 # quartz
